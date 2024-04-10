@@ -100,4 +100,4 @@ action.buyBankNifty(1500)
 
 unsubscribe()
 
-action.buyBankNifty(1500)
+// action.buyBankNifty(1500)
