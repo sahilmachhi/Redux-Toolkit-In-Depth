@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 function From() {
-  // const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState({});
 
@@ -11,7 +11,11 @@ function From() {
     console.log(user);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault
+    console.log(user);
+    dispatch(userData(user));
+  };
 
   return (
     <>
