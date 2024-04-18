@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { userData } from "../store/UserSlice";
 
-function From() {
+function Form() {
   const dispatch = useDispatch();
 
   const [user, setUser] = useState({});
 
   const configureUser = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-    console.log(user);
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault
+    e.preventDefault();
     console.log(user);
     dispatch(userData(user));
   };
@@ -37,7 +37,7 @@ function From() {
             type="text"
             className="form-control"
             id="exampleInputPassword1"
-            name="username"
+            name="Name"
             onChange={configureUser}
           />
         </div>
@@ -85,4 +85,4 @@ function From() {
   );
 }
 
-export default From;
+export default Form;

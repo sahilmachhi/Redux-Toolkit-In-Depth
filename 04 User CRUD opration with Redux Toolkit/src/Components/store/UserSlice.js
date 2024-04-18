@@ -5,9 +5,9 @@ const initialState = {
     loading: false,
     error: null
 }
-const userData = createAsyncThunk("userData", async (data) => {
+export const userData = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
     const response = await fetch("https://661d0d36e7b95ad7fa6bf9a3.mockapi.io/UserData", {
-        method: "POST", Headers: {
+        method: "POST", headers: {
             "Content-Type": "application/JSON"
         },
         body: JSON.stringify(data)
@@ -15,29 +15,33 @@ const userData = createAsyncThunk("userData", async (data) => {
 
     try {
         const data = await response.json();
-        return console.log(data)
+        return data
     } catch (error) {
-        console.log(error)
+        return rejectWithValue(error)
     }
 
 })
-const UserSlice = createSlice({
+export const UserSlice = createSlice({
     initialState,
     name: "userDetails",
     reducers: {},
-    extraReducers: {
-        [userData.pending]: (state) => {
+    extraReducers: (builder) => {
+
+        builder.addCase(userData.pending, (state) => {
             state.loading = true;
-        },
-        [userData.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.users.push(action.payload)
-        },
-        [userData.rejected]: (state) => {
-            state.loading = false
-        }
+        })
+            .addCase(userData.fulfilled, (state, action) => {
+                console.log("before data push", action.payload)
+                state.loading = false;
+                state.users.push(action.payload);
+                console.log("after data push", action.payload)
+            })
+            .addCase(userData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     }
 })
 
 
-export default UserSlice
+export default UserSlice.reducer
