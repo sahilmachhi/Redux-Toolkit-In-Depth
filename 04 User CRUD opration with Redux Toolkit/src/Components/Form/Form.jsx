@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { userData } from "../store/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 function Form() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({});
 
@@ -15,6 +17,7 @@ function Form() {
     e.preventDefault();
     console.log(user);
     dispatch(userData(user));
+    navigate("/");
   };
 
   return (

@@ -21,6 +21,19 @@ export const userData = createAsyncThunk("createUser", async (data, { rejectWith
     }
 
 })
+
+export const showUserData = createAsyncThunk("showData", async (any, { rejectWithValue }) => {
+    const response = await fetch("https://661d0d36e7b95ad7fa6bf9a3.mockapi.io/UserData");
+    try {
+        const data = await response.json();
+        return data
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+})
+
+
+
 export const UserSlice = createSlice({
     initialState,
     name: "userDetails",
@@ -40,8 +53,25 @@ export const UserSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+
+        builder.addCase(showUserData.pending, (state) => {
+            state.loading = true;
+        })
+            .addCase(showUserData.fulfilled, (state, action) => {
+                console.log("before data push", action.payload)
+                state.loading = false;
+                state.users = action.payload;
+                console.log("after data push", action.payload)
+            })
+            .addCase(showUserData.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     }
+
+
+
 })
 
 
-export default UserSlice.reducer
+export default UserSlice
