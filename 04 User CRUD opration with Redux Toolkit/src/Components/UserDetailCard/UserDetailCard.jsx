@@ -1,10 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { showUserData } from "../store/UserSlice";
+import UserPopUp from "./UserPopUp";
 
 function UserDetailCard() {
   const dispath = useDispatch();
   const { loading, users } = useSelector((state) => state.user);
+  const [popup, setPopup] = useState(false);
+  const [id, setId] = useState("");
 
   useEffect(() => {
     dispath(showUserData());
@@ -13,6 +16,7 @@ function UserDetailCard() {
   if (loading) {
     return <h1>loading</h1>;
   }
+
   return (
     <>
       <div
@@ -24,6 +28,9 @@ function UserDetailCard() {
           flexDirection: "column",
         }}
       >
+        {popup && (
+          <UserPopUp popup={popup} setPopup={setPopup} id={id} users={users} />
+        )}
         {users.map((data) => {
           return (
             <div
@@ -39,6 +46,14 @@ function UserDetailCard() {
                 <p className="card-text">Age: {data.age}</p>
                 <p className="card-text">gender: {data.gender}</p>
               </div>
+              <button
+                onClick={() => {
+                  setId(data.id);
+                  setPopup(!popup);
+                }}
+              >
+                View{" "}
+              </button>
             </div>
           );
         })}
