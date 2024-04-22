@@ -46,14 +46,32 @@ function UserDetailCard() {
                 <p className="card-text">Age: {data.age}</p>
                 <p className="card-text">gender: {data.gender}</p>
               </div>
-              <button
-                onClick={() => {
-                  setId(data.id);
-                  setPopup(!popup);
-                }}
-              >
-                View{" "}
-              </button>
+              <div className=" d-flex justify-content-evenly">
+                <button
+                  onClick={() => {
+                    setId(data.id);
+                    setPopup(!popup);
+                  }}
+                >
+                  View
+                </button>
+                <button
+                  onClick={() => {
+                    setId(data.id);
+                    setPopup(!popup);
+                  }}
+                >
+                  edit
+                </button>
+                <button
+                  onClick={() => {
+                    setId(data.id);
+                    setPopup(!popup);
+                  }}
+                >
+                  delete
+                </button>
+              </div>
             </div>
           );
         })}
