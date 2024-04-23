@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showUserData } from "../store/UserSlice";
+import { deleteUser, showUserData, userForm } from "../store/UserSlice";
 import UserPopUp from "./UserPopUp";
+import { useNavigate } from "react-router-dom";
 
 function UserDetailCard() {
+  const Navigate = useNavigate();
   const dispath = useDispatch();
   const { loading, users } = useSelector((state) => state.user);
   const [popup, setPopup] = useState(false);
@@ -11,7 +13,7 @@ function UserDetailCard() {
 
   useEffect(() => {
     dispath(showUserData());
-  }, []);
+  }, [dispath]);
 
   if (loading) {
     return <h1>loading</h1>;
@@ -57,16 +59,15 @@ function UserDetailCard() {
                 </button>
                 <button
                   onClick={() => {
-                    setId(data.id);
-                    setPopup(!popup);
+                    dispath(userForm(data.id));
+                    Navigate(`/update/${data.id}`);
                   }}
                 >
                   edit
                 </button>
                 <button
                   onClick={() => {
-                    setId(data.id);
-                    setPopup(!popup);
+                    dispath(deleteUser(data.id));
                   }}
                 >
                   delete
