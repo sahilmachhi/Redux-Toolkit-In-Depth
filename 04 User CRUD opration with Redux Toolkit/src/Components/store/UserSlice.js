@@ -3,7 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 const initialState = {
     users: [],
     loading: false,
-    error: null
+    error: null,
+    searchData: ""
 }
 export const userData = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
     const response = await fetch("https://661d0d36e7b95ad7fa6bf9a3.mockapi.io/UserData", {
@@ -44,12 +45,19 @@ export const deleteUser = createAsyncThunk("deleteUser", async (id, { rejectWith
     }
 })
 
-export const editUser = createAsyncThunk("editUser", async (id, { rejectWithValue }) => {
+export const editUser = createAsyncThunk("editUser", async (user, { rejectWithValue }) => {
+    let id = user.id
+
     const response = await fetch(`https://661d0d36e7b95ad7fa6bf9a3.mockapi.io/UserData/${id}`, {
-        method: "PUT"
+        method: "PUT",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(user)
     })
     try {
         const data = await response.json();
+
         return data
     } catch (error) {
         return rejectWithValue(error)
@@ -62,12 +70,10 @@ export const UserSlice = createSlice({
     initialState,
     name: "userDetails",
     reducers: {
-        userForm: (state, action) => {
-            console.log("userform triggereed")
-            console.log(action.payload)
-            state.users = state.users.filter((user) => user.id == action.payload)
-            console.log(state.users)
-        },
+        searchUser: (state, action) => {
+            state.searchData = action.payload
+
+        }
     },
     extraReducers: (builder) => {
 
@@ -76,10 +82,10 @@ export const UserSlice = createSlice({
             state.loading = true;
         })
             .addCase(userData.fulfilled, (state, action) => {
-                console.log("before data push", action.payload)
+
                 state.loading = false;
                 state.users.push(action.payload);
-                console.log("after data push", action.payload)
+
             })
             .addCase(userData.rejected, (state, action) => {
                 state.loading = false;
@@ -91,10 +97,8 @@ export const UserSlice = createSlice({
             state.loading = true;
         })
             .addCase(showUserData.fulfilled, (state, action) => {
-                console.log("before data push", action.payload)
                 state.loading = false;
                 state.users = action.payload;
-                console.log("after data push", action.payload)
             })
             .addCase(showUserData.rejected, (state, action) => {
                 state.loading = false;
@@ -108,9 +112,7 @@ export const UserSlice = createSlice({
         })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload)
                 state.users = state.users.filter((user) => user.id != action.payload)
-
             })
             .addCase(deleteUser.rejected, (state, action) => {
                 state.loading = false;
@@ -124,9 +126,13 @@ export const UserSlice = createSlice({
         })
             .addCase(editUser.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload)
-                state.users = state.users.filter((user) => user.id != action.payload)
-
+                const updatedUser = action.payload;
+                state.users = state.users.map((user) => {
+                    if (user.id === updatedUser.id) {
+                        return updatedUser;
+                    }
+                    return user;
+                });
             })
             .addCase(editUser.rejected, (state, action) => {
                 state.loading = false;
@@ -137,4 +143,4 @@ export const UserSlice = createSlice({
 
 
 export default UserSlice
-export const { userForm } = UserSlice.actions
+export const { searchUser } = UserSlice.actions

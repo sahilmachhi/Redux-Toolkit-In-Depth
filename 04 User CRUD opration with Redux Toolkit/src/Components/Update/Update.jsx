@@ -1,24 +1,26 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser, userData } from "../store/UserSlice";
-import { useNavigate } from "react-router-dom";
+import { editUser } from "../store/UserSlice";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Update() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userForm = useSelector((state) => state.user.users[0]);
-  console.log(userForm);
+  const { users } = useSelector((state) => state.user);
+  const userdata = users.filter((user) => user.id == id);
+  const userForm = userdata[0];
+
   const [user, setUser] = useState({
     Name: userForm.Name,
     FullName: userForm.FullName,
     age: userForm.age,
-
+    id: userForm.id,
     gender: userForm.gender,
     phone: userForm.phone,
     email: userForm.email,
   });
-  console.log(user);
 
   const configureUser = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -70,7 +72,7 @@ function Update() {
         <div className="mb-3">
           <label className="form-label">Phone Number</label>
           <input
-            type="text"
+            type="text "
             className="form-control"
             id="exampleInputPassword1"
             name="phone"

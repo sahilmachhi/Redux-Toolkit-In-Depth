@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { searchUser } from "../store/UserSlice";
 
 function Navbar() {
+  const [search, setSearch] = useState("");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(searchUser(search));
+  }, [search]);
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -39,6 +49,8 @@ function Navbar() {
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <button className="btn btn-outline-success" type="submit">
                 Search
